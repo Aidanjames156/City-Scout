@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityScout - Demographic Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🏙️ CityScout</h1>
+        <p class="subtitle">Population and demographic analysis for US cities</p>
+        
+        <form id="analysisForm" class="search-form">
+            <div class="form-group">
+                <label for="city">City Name</label>
+                <input type="text" id="city" name="city" placeholder="e.g., Austin, Miami, Denver" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" id="state" name="state" placeholder="e.g., TX, FL, CO" required>
+            </div>
+            
+            <button type="submit" id="analyzeBtn">
+                <span class="btn-text">Analyze Demographics</span>
+                <span class="loading-spinner" style="display: none;">🔄 Analyzing...</span>
+            </button>
+        </form>
+        
+        <div id="loading" class="loading" style="display: none;">
+            <div class="loading-animation">
+                <div class="spinner"></div>
+                <p>Fetching demographic data from US Census Bureau and Bureau of Labor Statistics...</p>
+            </div>
+        </div>
+        
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div id="results" class="results" style="display: none;">
+            <div class="result-header">
+                <h2 id="cityName"></h2>
+                <p class="analysis-date" id="analysisDate"></p>
+            </div>
+            
+            <div class="result-section">
+                <h3>📊 Demographics</h3>
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <span class="metric-label">Population</span>
+                        <span class="metric-value" id="population">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">5-Year Growth</span>
+                        <span class="metric-value" id="growth">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Median Income</span>
+                        <span class="metric-value" id="income">-</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Unemployment Rate</span>
+                        <span class="metric-value" id="unemployment">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <h3>📈 Key Insights</h3>
+                <div id="insights" class="insights-list">
+                    <!-- Insights will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <h3>📋 Raw Data (JSON)</h3>
+                <button id="toggleJson" class="toggle-btn">Show JSON Data</button>
+                <pre id="jsonData" class="json-display" style="display: none;"></pre>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Data sources: US Census Bureau, Bureau of Labor Statistics</p>
+            <p>© 2025 CityScout - Demographic Analysis Tool</p>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

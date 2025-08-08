@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ city }}, {{ state }} - CityScout Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏙️ CityScout</h1>
+            <p class="subtitle">Analysis Results</p>
+        </header>
+
+        <div class="results-header">
+            <h2>{{ city }}, {{ state }}</h2>
+            <p class="analysis-date">Generated on: {{ data.analysis_date }}</p>
+            <a href="{{ url_for('index') }}" class="btn-secondary">← Analyze Another City</a>
+        </div>
+
+        <div class="results-grid">
+            <div class="result-section">
+                <h3>📊 Demographics</h3>
+                <div class="metrics-grid">
+                    {% if data.total_population %}
+                    <div class="metric">
+                        <span class="metric-label">Population</span>
+                        <span class="metric-value">{{ "{:,}".format(data.total_population) }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if data.population_growth_5yr %}
+                    <div class="metric">
+                        <span class="metric-label">5-Year Growth</span>
+                        <span class="metric-value">{{ "%.1f"|format(data.population_growth_5yr) }}%</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if data.median_household_income %}
+                    <div class="metric">
+                        <span class="metric-label">Median Income</span>
+                        <span class="metric-value">${{ "{:,}".format(data.median_household_income) }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if data.unemployment_rate %}
+                    <div class="metric">
+                        <span class="metric-label">Unemployment Rate</span>
+                        <span class="metric-value">{{ "%.1f"|format(data.unemployment_rate) }}%</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="result-section">
+                <h3>📈 Key Insights</h3>
+                <div class="insights-list">
+                    {% set pop = data.total_population or 0 %}
+                    {% set growth = data.population_growth_5yr or 0 %}
+                    {% set income = data.median_household_income or 0 %}
+                    {% set unemployment = data.unemployment_rate or 0 %}
+                    
+                    {% if pop > 1000000 %}
+                    <div class="insight positive">
+                        🏙️ Major metropolitan area with {{ "{:,}".format(pop) }} residents
+                    </div>
+                    {% elif pop > 500000 %}
+                    <div class="insight neutral">
+                        🏘️ Large city with {{ "{:,}".format(pop) }} residents
+                    </div>
+                    {% endif %}
+                    
+                    {% if growth > 2 %}
+                    <div class="insight positive">
+                        📈 Strong population growth of {{ "%.1f"|format(growth) }}% over 5 years
+                    </div>
+                    {% elif growth < 0 %}
+                    <div class="insight negative">
+                        📉 Population decline of {{ "%.1f"|format(abs(growth)) }}% over 5 years
+                    </div>
+                    {% endif %}
+                    
+                    {% if income > 80000 %}
+                    <div class="insight positive">
+                        💰 High median income area ({{ "${:,}".format(income) }})
+                    </div>
+                    {% elif income < 50000 %}
+                    <div class="insight neutral">
+                        💵 Lower income area ({{ "${:,}".format(income) }})
+                    </div>
+                    {% endif %}
+                    
+                    {% if unemployment < 4 %}
+                    <div class="insight positive">
+                        💼 Low unemployment rate ({{ "%.1f"|format(unemployment) }}%)
+                    </div>
+                    {% elif unemployment > 7 %}
+                    <div class="insight negative">
+                        📊 High unemployment rate ({{ "%.1f"|format(unemployment) }}%)
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="result-section full-width">
+                <h3>📋 Data Summary</h3>
+                <div class="data-summary">
+                    <p><strong>Data Sources:</strong> U.S. Census Bureau (Demographics), Bureau of Labor Statistics (Employment)</p>
+                    <p><strong>Note:</strong> Population and income data from most recent available Census estimates. Employment data is state-level.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="btn-primary">Analyze Another City</a>
+            <button onclick="window.print()" class="btn-secondary">Print Report</button>
+        </div>
+
+        <footer>
+            <p>© 2025 CityScout - Demographic Analysis Tool</p>
+        </footer>
+    </div>
+</body>
+</html>
