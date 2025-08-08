@@ -13,8 +13,22 @@ class BLSDataCollector:
         self.session = requests.Session()
         self.logger = logging.getLogger(__name__)
         
+        # Check if API key is available
+        if not self.api_key or self.api_key == 'your_bls_api_key_here':
+            self.logger.warning("BLS API key not configured - employment data will be unavailable")
+            self.api_available = False
+        else:
+            self.api_available = True
+        
     def get_unemployment_rate(self, state: str) -> Dict[str, Any]:
         """Get unemployment rate for a state (BLS doesn't provide city-level data for all cities)."""
+        if not self.api_available:
+            self.logger.info("BLS API not available - returning default employment data")
+            return {
+                'unemployment_rate': None,
+                'unemployment_rate_note': 'BLS API key not configured'
+            }
+            
         try:
             # Use state-level unemployment rate as proxy
             # Format: LAUST + state FIPS + 0000000000 + 03 (unemployment rate)
@@ -72,6 +86,14 @@ class BLSDataCollector:
         
     def get_employment_data(self, state: str) -> Dict[str, Any]:
         """Get employment statistics for a state."""
+        if not self.api_available:
+            self.logger.info("BLS API not available - returning default employment data")
+            return {
+                'employment_level': None,
+                'labor_force': None,
+                'employment_note': 'BLS API key not configured'
+            }
+            
         try:
             # Get employment level and labor force data
             state_fips = self._get_state_fips(state)
